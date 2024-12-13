@@ -23,11 +23,15 @@ import org.apache.seatunnel.core.starter.exception.CommandException;
 import org.apache.seatunnel.core.starter.seatunnel.args.ServerCommandArgs;
 import org.apache.seatunnel.core.starter.utils.CommandLineUtils;
 
+/**
+ * 启动类
+ */
 public class SeaTunnelServer {
     public static void main(String[] args) throws CommandException {
         ServerCommandArgs serverCommandArgs =
                 CommandLineUtils.parse(
                         args,
+                        //构建命令行参数,默认节点角色是master_and_worker
                         new ServerCommandArgs(),
                         EngineType.SEATUNNEL.getStarterShellName(),
                         true);

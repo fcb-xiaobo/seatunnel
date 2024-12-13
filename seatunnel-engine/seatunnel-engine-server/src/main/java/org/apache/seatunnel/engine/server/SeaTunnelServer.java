@@ -126,7 +126,7 @@ public class SeaTunnelServer
                         seaTunnelConfig.getEngineConfig().isClassloaderCacheMode(), nodeEngine);
 
         eventService = new EventService(nodeEngine);
-
+        //根据角色启动
         if (EngineConfig.ClusterRole.MASTER_AND_WORKER.ordinal()
                 == seaTunnelConfig.getEngineConfig().getClusterRole().ordinal()) {
             startWorker();
