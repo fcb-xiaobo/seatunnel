@@ -36,9 +36,16 @@ public class ServerExecuteCommand implements Command<ServerCommandArgs> {
         this.serverCommandArgs = serverCommandArgs;
     }
 
+    /**
+     * 1. 加载seatunnel配置文件
+     * 2. 设置角色
+     * 3. 创建createHazelcastInstance 进行节点通信
+     */
     @Override
     public void execute() {
+        //根据加载策略获取配置文件
         SeaTunnelConfig seaTunnelConfig = ConfigProvider.locateAndGetSeaTunnelConfig();
+        //获取命令行提交的节点角色
         String clusterRole = this.serverCommandArgs.getClusterRole();
         if (StringUtils.isNotBlank(clusterRole)) {
             if (EngineConfig.ClusterRole.MASTER.toString().equalsIgnoreCase(clusterRole)) {
@@ -52,6 +59,7 @@ public class ServerExecuteCommand implements Command<ServerCommandArgs> {
                 throw new SeaTunnelEngineException("Not supported cluster role: " + clusterRole);
             }
         } else {
+            //默认角色是 MASTER_AND_WORKER
             seaTunnelConfig
                     .getEngineConfig()
                     .setClusterRole(EngineConfig.ClusterRole.MASTER_AND_WORKER);

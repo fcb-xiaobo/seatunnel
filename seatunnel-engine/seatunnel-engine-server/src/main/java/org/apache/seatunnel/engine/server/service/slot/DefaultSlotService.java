@@ -92,16 +92,19 @@ public class DefaultSlotService implements SlotService {
                                         String.format(
                                                 "hz.%s.seaTunnel.slotService.thread",
                                                 nodeEngine.getHazelcastInstance().getName())));
+        //如没开启动态slot
         if (!config.isDynamicSlot()) {
             initFixedSlots();
         }
         unassignedResource.set(getNodeResource());
+        //启动心跳上报线程,默认5s上报一次
         scheduledExecutorService.scheduleAtFixedRate(
                 () -> {
                     try {
                         LOGGER.fine(
                                 "start send heartbeat to resource manager, this address: "
                                         + nodeEngine.getClusterService().getThisAddress());
+                        //把worker 信息发送到master,分配的资源,没分配的等等...
                         sendToMaster(new WorkerHeartbeatOperation(getWorkerProfile())).join();
                     } catch (Exception e) {
                         LOGGER.warning(
