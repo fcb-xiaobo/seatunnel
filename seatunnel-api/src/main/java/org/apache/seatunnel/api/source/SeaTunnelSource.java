@@ -34,6 +34,8 @@ import java.util.List;
  * @param <T> The type of records produced by the source.
  * @param <SplitT> The type of splits handled by the source.
  * @param <StateT> The type of checkpoint states.
+ *                source 源头的工厂类,定义了对source源的通用抽象行为
+ *                所有支持source的connector都实现这个类
  */
 public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends Serializable>
         extends Serializable,
@@ -43,7 +45,7 @@ public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends S
 
     /**
      * Get the boundedness of this source.
-     *
+     * 获取流的边界,有界,无界
      * @return the boundedness of this source.
      */
     Boundedness getBoundedness();
@@ -53,6 +55,7 @@ public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends S
      *
      * @deprecated Please use {@link #getProducedCatalogTables}
      * @return SeaTunnel data type.
+     * 此方法已废弃,后续使用catalogTable来描述
      */
     @Deprecated
     default SeaTunnelDataType<T> getProducedType() {
@@ -63,6 +66,8 @@ public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends S
      * Get the catalog tables output by this source, It is recommended that all connectors implement
      * this method instead of {@link #getProducedType}. CatalogTable contains more information to
      * help downstream support more accurate and complete synchronization capabilities.
+     * 模板设计模式实现
+     * 当source源读取多个表时,使用list集合来描述多个table的元数据
      */
     default List<CatalogTable> getProducedCatalogTables() {
         throw new UnsupportedOperationException(
@@ -71,7 +76,7 @@ public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends S
 
     /**
      * Create source reader, used to produce data.
-     *
+     * 创建一个reader,真正读取数据类
      * @param readerContext reader context.
      * @return source reader.
      * @throws Exception when create reader failed.
@@ -92,6 +97,11 @@ public interface SeaTunnelSource<T, SplitT extends SourceSplit, StateT extends S
      * Create source split enumerator, used to generate splits. This method will be called only once
      * when start a source.
      *
+     * source的切分器,比如源头数据很大,可以按照配置切分成不同的数据块,可以并行读取处理,
+     * 这个方法仅仅在启动的时候创建一次
+     *
+     *
+     * 核心类 : SourceSplitEnumerator
      * @param enumeratorContext enumerator context.
      * @return source split enumerator.
      * @throws Exception when create enumerator failed.

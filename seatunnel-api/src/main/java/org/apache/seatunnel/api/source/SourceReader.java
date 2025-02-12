@@ -26,7 +26,29 @@ import java.util.List;
 
 /**
  * The {@link SourceReader} is used to generate source record, and it will be running at worker.
+ * 运行在worker节点,主要负责数据的读取
  *
+ * open(),close() 生命周期方法
+ *
+ *
+ * pollNext() 抽取数据的方法,每个connector具体实现,收取源source转成seatunnelRow
+ * addSplits() reader接收splitEnumerator分配的任务
+ * snapshotState() 这个方法在做ck时候会被调用,记录reader的一些状态,后续容错可以用
+ *
+ *
+ *
+ * |      SeatunnelSource                       |
+ * |             SourceSplitEnumerator  split |
+ * |                    |                 +
+ *                    register
+ *                    |
+ *               SourceReader            reader
+ * |
+ * |
+ *
+ *
+ * SourceSplitEnumerator 负责对source 进行拆分,然后将拆分的spilt 下发给reader
+ * SourceReader 负责向SourceSplitEnumerator进行注册,接收split
  * @param <T> record type.
  * @param <SplitT> source split type.
  */

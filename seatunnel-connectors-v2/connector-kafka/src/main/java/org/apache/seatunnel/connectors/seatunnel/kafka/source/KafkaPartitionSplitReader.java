@@ -75,7 +75,7 @@ public class KafkaPartitionSplitReader
 
     private final long pollTimeout;
 
-    public KafkaPartitionSplitReader(
+     public KafkaPartitionSplitReader(
             KafkaSourceConfig kafkaSourceConfig, SourceReader.Context context) {
         this.kafkaSourceConfig = kafkaSourceConfig;
         this.consumer = initConsumer(kafkaSourceConfig, context.getIndexOfSubtask());

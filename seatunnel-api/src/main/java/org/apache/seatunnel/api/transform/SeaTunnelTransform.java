@@ -23,7 +23,16 @@ import org.apache.seatunnel.api.table.catalog.CatalogTable;
 import org.apache.seatunnel.api.table.type.SeaTunnelDataType;
 
 import java.io.Serializable;
+/*
+  SeaTunnelTransform 是source层处理后的中间层级,做一些定义的操作
 
+  核心方法: seatunnel中仅支持对单条数据map操作
+  T map()
+
+  //获取transform处理后的数据结构
+  getProducedCatalogTable()
+
+ */
 public interface SeaTunnelTransform<T>
         extends Serializable, PluginIdentifierInterface, SeaTunnelJobAware {
 

@@ -52,12 +52,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * 切分枚举器
+ * 1. 负责分区的发现
+ * 2. 切分分片/分区
+ */
 @Slf4j
 public class KafkaSourceSplitEnumerator
         implements SourceSplitEnumerator<KafkaSourceSplit, KafkaSourceState> {
 
     private static final String CLIENT_ID_PREFIX = "seatunnel";
-
+    // topic -> consumer元数据
     private final Map<TablePath, ConsumerMetadata> tablePathMetadataMap;
     private final Context<KafkaSourceSplit> context;
     private final long discoveryIntervalMillis;
@@ -114,6 +119,7 @@ public class KafkaSourceSplitEnumerator
     @Override
     public void open() {
         if (discoveryIntervalMillis > 0) {
+            //启动一个固定线程,设置为守护线程
             this.executor =
                     Executors.newScheduledThreadPool(
                             1,
@@ -127,6 +133,7 @@ public class KafkaSourceSplitEnumerator
                     executor.scheduleWithFixedDelay(
                             () -> {
                                 try {
+                                    //发现是否有新的数据可以切分
                                     discoverySplits();
                                 } catch (Exception e) {
                                     log.error("Dynamic discovery failure:", e);
@@ -287,6 +294,12 @@ public class KafkaSourceSplitEnumerator
         return AdminClient.create(props);
     }
 
+    /**
+     * 获取topic信息
+     * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     private Set<KafkaSourceSplit> getTopicInfo() throws ExecutionException, InterruptedException {
         Collection<String> topics = new HashSet<>();
         for (TablePath tablePath : tablePathMetadataMap.keySet()) {
@@ -408,7 +421,9 @@ public class KafkaSourceSplitEnumerator
     }
 
     private void discoverySplits() throws ExecutionException, InterruptedException {
+        //抓取待切分的
         fetchPendingPartitionSplit();
+        //分配切分
         assignSplit();
     }
 

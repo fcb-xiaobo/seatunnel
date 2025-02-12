@@ -614,6 +614,7 @@ public class CoordinatorService {
         }
 
         MDCExecutorService mdcExecutorService = MDCTracer.tracing(jobId, executorService);
+        //创建jobMaster,一个job一个jobMaster
         JobMaster jobMaster =
                 new JobMaster(
                         jobId,

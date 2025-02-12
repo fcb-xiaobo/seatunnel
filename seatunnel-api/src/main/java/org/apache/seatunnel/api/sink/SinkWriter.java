@@ -31,10 +31,17 @@ import java.util.Optional;
  * The sink writer use to write data to third party data receiver. This class will run on
  * taskManger/Worker.
  *
+ *  sinkWrite将数据写入配置的sink数据源中,这个类运行在worker中
  * @param <T> The data class by sink accept. Only support {@link
  *     org.apache.seatunnel.api.table.type.SeaTunnelRow} at now.
  * @param <CommitInfoT> The type of commit message.
  * @param <StateT> The type of state.
+ *
+ *   write() 接收到上游数据,写入到目标sink中
+ *   applySchemaChange():上游表结构变动时,下游相应实现,比如增删,修改
+ *   prepareCommit():二阶段提交时,生成提交信息,方法调用是在checkpoint时
+ *   snapshotState(): 当做checkpoint时,存储write的状态,后续容错使用
+ *
  */
 public interface SinkWriter<T, CommitInfoT, StateT> {
 

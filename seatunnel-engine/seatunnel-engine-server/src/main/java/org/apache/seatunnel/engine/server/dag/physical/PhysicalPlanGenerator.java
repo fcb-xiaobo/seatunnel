@@ -149,7 +149,7 @@ public class PhysicalPlanGenerator {
         this.runningJobStateTimestampsIMap = runningJobStateTimestampsIMap;
         this.queueType = queueType;
     }
-
+    //物理计划生成
     public Tuple2<PhysicalPlan, Map<Integer, CheckpointPlan>> generate() {
         Map<String, String> tagFilter =
                 (Map<String, String>)

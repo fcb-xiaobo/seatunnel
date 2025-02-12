@@ -36,7 +36,14 @@ public class SeaTunnelEngineLocalExample {
 
     public static void main(String[] args)
             throws FileNotFoundException, URISyntaxException, CommandException {
-        String configurePath = args.length > 0 ? args[0] : "/examples/fake_to_console.conf";
+//        String configurePath = args.length > 0 ? args[0] : "/examples/fake_to_console.conf";
+
+
+        String configurePath = args.length > 0 ? args[0] : "/examples/kafka_to_kafka_exactly_once.conf";
+
+
+//        String configurePath = args.length > 0 ? args[0] : "/examples/es_to_sr.conf";
+
         String configFile = getTestConfigFile(configurePath);
         ClientCommandArgs clientCommandArgs = new ClientCommandArgs();
         clientCommandArgs.setConfigFile(configFile);

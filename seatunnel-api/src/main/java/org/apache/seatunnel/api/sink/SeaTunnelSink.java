@@ -43,6 +43,19 @@ import java.util.Optional;
  * @param <AggregatedCommitInfoT> The aggregated commit message class, combine by {@link
  *     CommitInfoT}. {@link SinkAggregatedCommitter} handle it, this class should implement
  *     interface {@link Serializable}.
+ *
+    Sink层封装的统一接口,负责描述整个sink,每个connector sink 都要实现对应的接口实现
+
+
+createWriter/restoreWriter 创建和恢复writer
+ writer 是真正执行数据写入的类
+
+
+在二阶段提交时,创建一个sinkCommit来完成二阶段提交
+createCommitter()
+createAggregatedCommitter()
+ 二个commit的区别是,createAggregatedCommitter是单一实例去执行,将所有的提交任务集中到一个地方执行,推荐使用
+
  */
 public interface SeaTunnelSink<IN, StateT, CommitInfoT, AggregatedCommitInfoT>
         extends Serializable,

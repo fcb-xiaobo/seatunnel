@@ -21,7 +21,10 @@ import org.apache.seatunnel.api.table.schema.event.SchemaChangeEvent;
 
 /**
  * A {@link Collector} is used to collect data from {@link SourceReader}.
- *
+ * source
+ * transfrom
+ * sink
+ * 存储每个层级传输的数据
  * @param <T> data type.
  */
 public interface Collector<T> {

@@ -29,6 +29,13 @@ import java.util.Set;
 /**
  * The {@link SourceSplitEnumerator} is responsible for enumerating the splits of a source. It will
  * run at master.
+ *  负责source拆分的枚举器,运行在master上
+ *
+ *  open(),run(),close() 生命周期相关方法
+ *
+ *  addSplitsBack()    添加运行失败的任务到enumerator中,后续对这个失败的进行重新分配
+ *  handleSplitRequest()  执行拆分请求,reader发起,真正代码实现中,基本都是splitEnumerator拆分完任务下发给reader
+ *  registerReader() reader方法主要向split enumerator进行注册
  *
  * @param <SplitT> source split type
  * @param <StateT>source split state type
@@ -85,7 +92,10 @@ public interface SourceSplitEnumerator<SplitT extends SourceSplit, StateT>
          */
         Set<Integer> registeredReaders();
 
-        /** Assign the splits. */
+        /** Assign the splits.
+         *  splitEnumerator主动向某个reader推送任务
+         *
+         * */
         void assignSplit(int subtaskId, List<SplitT> splits);
 
         /**
@@ -104,7 +114,7 @@ public interface SourceSplitEnumerator<SplitT extends SourceSplit, StateT>
 
         /**
          * Signals a subtask that it will not receive any further split.
-         *
+         * 告诉reader后续不会收到拆分的新任务
          * @param subtask The index of the operator's parallel subtask that shall be signaled it
          *     will not receive any further split.
          */

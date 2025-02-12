@@ -17,26 +17,20 @@
 
 package org.apache.seatunnel.engine.server.rest.servlet;
 
-import com.hazelcast.spi.impl.NodeEngineImpl;
-import org.apache.commons.io.IOUtils;
 import org.apache.seatunnel.engine.server.rest.service.JobInfoService;
 
+
+import com.hazelcast.spi.impl.NodeEngineImpl;
+
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
-import static org.apache.seatunnel.engine.server.rest.RestConstant.CONFIG_FORMAT;
-import static org.apache.seatunnel.engine.server.rest.RestConstant.HOCON;
+import java.io.IOException;
+
+
 public class SubmitJobByUploadFileServlet extends BaseServlet {
     private final JobInfoService jobInfoService;
-
-    private List nums= Arrays.asList(0,1,2,51);
 
 
     public SubmitJobByUploadFileServlet(NodeEngineImpl nodeEngine) {
@@ -45,30 +39,29 @@ public class SubmitJobByUploadFileServlet extends BaseServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String fullContent = IOUtils.toString(req.getInputStream(), StandardCharsets.UTF_8);
-
-//        int startIndex = s1.indexOf("env");
-//        int endIndex = s1.lastIndexOf("}");
-//        String content=s1.substring(startIndex,endIndex+1);
-
-        String[] split = fullContent.split("\n");
-        StringBuffer sb=new StringBuffer();
-        for (int i = 0; i < split.length; i++) {
-            if(!nums.contains(i)){
-                sb.append(split[i]).append("\n");
-            }
-        }
-
-
-
-        System.out.println(sb.toString());
-
-        Map<String, String> requestParams = getParameterMap(req);
-        if (HOCON.equalsIgnoreCase(requestParams.get(CONFIG_FORMAT))) {
-            writeJson(resp, jobInfoService.submitJob(requestParams, sb.toString().getBytes()));
-        } else {
-            writeJson(resp, jobInfoService.submitJob(requestParams, requestBody(req)));
-        }
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException {
+//        String fullContent = IOUtils.toString(req.getInputStream(), StandardCharsets.UTF_8);
+//
+//        //        int startIndex = s1.indexOf("env");
+//        //        int endIndex = s1.lastIndexOf("}");
+//        //        String content=s1.substring(startIndex,endIndex+1);
+//
+//        String[] split = fullContent.split("\n");
+//        StringBuffer sb = new StringBuffer();
+//        for (int i = 0; i < split.length; i++) {
+//            if (!nums.contains(i)) {
+//                sb.append(split[i]).append("\n");
+//            }
+//        }
+//
+//        System.out.println(sb.toString());
+//
+//        Map<String, String> requestParams = getParameterMap(req);
+//        if (HOCON.equalsIgnoreCase(requestParams.get(CONFIG_FORMAT))) {
+//            writeJson(resp, jobInfoService.submitJob(requestParams, sb.toString().getBytes()));
+//        } else {
+//            writeJson(resp, jobInfoService.submitJob(requestParams, requestBody(req)));
+//        }
     }
 }

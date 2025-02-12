@@ -40,6 +40,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ *
+ */
 public class KafkaSourceFetcherManager
         extends SingleThreadFetcherManager<ConsumerRecord<byte[], byte[]>, KafkaSourceSplit> {
 
