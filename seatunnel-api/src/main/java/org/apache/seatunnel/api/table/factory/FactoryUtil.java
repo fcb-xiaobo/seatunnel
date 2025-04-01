@@ -128,6 +128,7 @@ public final class FactoryUtil {
                     TableSourceFactory factory, ReadonlyConfig options, ClassLoader classLoader) {
         TableSourceFactoryContext context = new TableSourceFactoryContext(options, classLoader);
         ConfigValidator.of(context.getOptions()).validate(factory.optionRule());
+        //todo 为啥执行二遍create source
         TableSource<T, SplitT, StateT> tableSource = factory.createSource(context);
         return tableSource.createSource();
     }
@@ -226,7 +227,7 @@ public final class FactoryUtil {
         checkMultipleMatchingFactories(factoryIdentifier, factoryClass, matchingFactories);
         return Optional.of(matchingFactories.get(0));
     }
-
+    //查询sourceFactory工厂
     public static <T extends Factory> T discoverFactory(
             ClassLoader classLoader, Class<T> factoryClass, String factoryIdentifier) {
         final List<T> foundFactories = discoverFactories(classLoader, factoryClass);

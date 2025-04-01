@@ -188,12 +188,15 @@ public class MultipleTableJobConfigParser {
 
     public ImmutablePair<List<Action>, Set<URL>> parse(ClassLoaderService classLoaderService) {
         this.fillJobConfigAndCommonJars();
+        //获取source 配置
         List<? extends Config> sourceConfigs =
                 TypesafeConfigUtils.getConfigList(
                         seaTunnelJobConfig, "source", Collections.emptyList());
+        //获取transform配置
         List<? extends Config> transformConfigs =
                 TypesafeConfigUtils.getConfigList(
                         seaTunnelJobConfig, "transform", Collections.emptyList());
+        //获取sink配置
         List<? extends Config> sinkConfigs =
                 TypesafeConfigUtils.getConfigList(
                         seaTunnelJobConfig, "sink", Collections.emptyList());
@@ -229,11 +232,13 @@ public class MultipleTableJobConfigParser {
             for (int configIndex = 0; configIndex < sourceConfigs.size(); configIndex++) {
                 Config sourceConfig = sourceConfigs.get(configIndex);
                 Tuple2<String, List<Tuple2<CatalogTable, Action>>> tuple2 =
+                        //构建source
                         parseSource(configIndex, sourceConfig, classLoader);
                 tableWithActionMap.put(tuple2._1(), tuple2._2());
             }
 
             log.info("start generating all transforms.");
+            //构建transform
             parseTransforms(transformConfigs, classLoader, tableWithActionMap);
 
             log.info("start generating all sinks.");
@@ -241,6 +246,7 @@ public class MultipleTableJobConfigParser {
             for (int configIndex = 0; configIndex < sinkConfigs.size(); configIndex++) {
                 Config sinkConfig = sinkConfigs.get(configIndex);
                 sinkActions.addAll(
+                        //构建sink
                         parseSink(configIndex, sinkConfig, classLoader, tableWithActionMap));
             }
             Set<URL> factoryUrls = getUsedFactoryUrls(sinkActions);
@@ -378,7 +384,7 @@ public class MultipleTableJobConfigParser {
         final String factoryId = getFactoryId(readonlyConfig);
         final String tableId =
                 readonlyConfig.getOptional(CommonOptions.RESULT_TABLE_NAME).orElse(DEFAULT_ID);
-
+        //获取并行度
         final int parallelism = getParallelism(readonlyConfig);
 
         boolean fallback =
@@ -402,6 +408,7 @@ public class MultipleTableJobConfigParser {
                     FactoryUtil.restoreAndPrepareSource(
                             readonlyConfig, classLoader, factoryId, checkpoint);
         } else {
+            //创建sourceFactory
             tuple2 = FactoryUtil.createAndPrepareSource(readonlyConfig, classLoader, factoryId);
         }
 

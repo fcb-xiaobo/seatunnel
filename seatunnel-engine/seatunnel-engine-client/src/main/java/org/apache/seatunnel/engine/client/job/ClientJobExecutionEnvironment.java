@@ -120,6 +120,25 @@ public class ClientJobExecutionEnvironment extends AbstractJobEnvironment {
     @VisibleForTesting
     @Override
     public LogicalDag getLogicalDag() {
+        /**
+         * 解析出物理执行图  example.conf   fake to console ,没有transform
+         * sink =>{
+         *     name="Sink[0]-console-MultiTableSink";
+         *     sink=> "fake"
+         *
+         * }
+         *  上游
+         * upstream => 集合,支持多个source
+         *  {
+         *       source => fakeSource
+         *       name = "Source[0]-FakeSource"
+         *       id
+         *       parallelism
+         *  }
+         *
+         *
+         *
+         */
         ImmutablePair<List<Action>, Set<URL>> immutablePair = getJobConfigParser().parse(null);
         actions.addAll(immutablePair.getLeft());
         // Enable upload connector jar package to engine server, automatically upload connector Jar
@@ -188,6 +207,7 @@ public class ClientJobExecutionEnvironment extends AbstractJobEnvironment {
     }
 
     public ClientJobProxy execute() throws ExecutionException, InterruptedException {
+        //获取逻辑执行图
         LogicalDag logicalDag = getLogicalDag();
         JobImmutableInformation jobImmutableInformation =
                 new JobImmutableInformation(

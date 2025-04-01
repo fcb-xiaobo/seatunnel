@@ -50,7 +50,12 @@ public final class ConfigProvider {
 
         YamlSeaTunnelConfigLocator yamlConfigLocator = new YamlSeaTunnelConfigLocator();
         SeaTunnelConfig config;
-
+        /**
+         * 加载 seatunnel 配置文件
+         * 1. 尝试从系统配置中加载yaml配置文件 system.setProperty
+         * 2. 尝试加载yaml配置文件从工作目录中
+         * 3. 加载默认的yaml配置(项目config下)
+          */
         if (yamlConfigLocator.locateFromSystemProperty()) {
             // 1. Try loading YAML config if provided in system property
             config =

@@ -76,6 +76,11 @@ public class LogicalDagGenerator {
         logicalDag.getEdges().addAll(logicalEdges);
         logicalDag.getLogicalVertexMap().putAll(logicalVertexMap);
         logicalDag.setStartWithSavePoint(isStartWithSavePoint);
+        /**
+         * {"vertices":[{"id":1,"name":"Source[0]-FakeSource(id=1)","parallelism":2},
+         * {"id":3,"name":"Sink[0]-console-MultiTableSink(id=3)","parallelism":2}],
+         * "edges":[{"inputVertex":"Source[0]-FakeSource","targetVertex":"Sink[0]-console-MultiTableSink"}]}
+         */
         return logicalDag;
     }
 

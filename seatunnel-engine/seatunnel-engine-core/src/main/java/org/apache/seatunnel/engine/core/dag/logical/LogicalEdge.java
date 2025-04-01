@@ -34,7 +34,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class LogicalEdge implements IdentifiedDataSerializable {
 
     /** The input vertex connected to this edge. */
+    //输入点,比如source
     private LogicalVertex inputVertex;
+    //输出点,比如sink
 
     /** The target vertex connected to this edge. */
     private LogicalVertex targetVertex;

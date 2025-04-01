@@ -81,9 +81,12 @@ public class ClientExecuteCommand implements Command<ClientCommandArgs> {
         JobMetricsRunner.JobMetricsSummary jobMetricsSummary = null;
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now();
+        //获取启动配置文件
         SeaTunnelConfig seaTunnelConfig = ConfigProvider.locateAndGetSeaTunnelConfig();
         try {
+            //获取集群名称
             String clusterName = clientCommandArgs.getClusterName();
+            //获取客户端配置
             ClientConfig clientConfig = ConfigProvider.locateAndGetClientConfig();
             //  get running mode
             boolean isLocalMode = clientCommandArgs.getMasterType().equals(MasterType.LOCAL);
@@ -137,6 +140,7 @@ public class ClientExecuteCommand implements Command<ClientCommandArgs> {
                 JobConfig jobConfig = new JobConfig();
                 ClientJobExecutionEnvironment jobExecutionEnv;
                 jobConfig.setName(clientCommandArgs.getJobName());
+                //是否从checkpoint中恢复任务
                 if (null != clientCommandArgs.getRestoreJobId()) {
                     jobExecutionEnv =
                             engineClient.restoreExecutionContext(
